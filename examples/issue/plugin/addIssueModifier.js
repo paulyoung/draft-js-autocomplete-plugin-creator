@@ -15,20 +15,8 @@ export default (editorState, issue) => {
   let issueReplacedContent = Modifier.replaceText(
     editorState.getCurrentContent(),
     issueTextSelection,
-    `#${issue.get('id')}`,
+    issue.get('name'),
   );
-
-  // If the issue is inserted at the end, a space is appended right after for
-  // a smooth writing experience.
-  const blockKey = issueTextSelection.getAnchorKey();
-  const blockSize = editorState.getCurrentContent().getBlockForKey(blockKey).getLength();
-  if (blockSize === end) {
-    issueReplacedContent = Modifier.insertText(
-      issueReplacedContent,
-      issueReplacedContent.getSelectionAfter(),
-      ' ',
-    );
-  }
 
   const newEditorState = EditorState.push(
     editorState,

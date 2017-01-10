@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { EditorState } from 'draft-js';
+import { ContentState, EditorState } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import { List, fromJS } from 'immutable';
 
@@ -13,16 +13,10 @@ const plugins = [issueSuggestionPlugin];
 
 const suggestions = fromJS([
   {
-    id: 1,
-    subject: 'New Cool Feature',
+    name: 'foo.bar',
   },
   {
-    id: 2,
-    subject: 'Bug',
-  },
-  {
-    id: 3,
-    subject: 'Improve Documentation',
+    name: 'baz.qux'
   },
 ]);
 
@@ -31,17 +25,20 @@ export default class IssueEditor extends React.Component {
     super(props);
 
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState: EditorState.moveFocusToEnd(
+        EditorState.createWithContent(
+          ContentState.createFromText('Some initial content')
+        )
+      ),
       suggestions: List(),
     };
   }
 
-  onChange = (editorState, cb) => this.setState({ editorState }, cb);
+  onChange = (editorState) => this.setState({ editorState });
 
   onIssueSearchChange = ({ value }) => {
-    const searchValue = value.substring(1, value.length);
     this.setState({
-      suggestions: defaultSuggestionsFilter(searchValue, suggestions),
+      suggestions: defaultSuggestionsFilter(value, suggestions),
     });
   };
 
